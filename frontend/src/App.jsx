@@ -1,10 +1,12 @@
 import React from 'react'
-
+import Header from './Components/Header'
 
 function App() {
 
   return (
-    <h1 className='text-5xl'>Quick Digest</h1>
+    <div>
+      <Header/>
+    </div>
   )
 }
 
