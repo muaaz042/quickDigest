@@ -1,13 +1,13 @@
 import React from 'react'
 import Header from './Components/Header'
-import SmartFeatures from './Components/SmartFeatures'
+import Summarizer from './Components/Summarizer'
 
 function App() {
 
   return (
     <div>
       <Header/>
-      <SmartFeatures/>
+      <Summarizer/>
     </div>
   )
 }
