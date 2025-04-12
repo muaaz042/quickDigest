@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { MdOutlineContentCopy } from "react-icons/md";
 import { ToastContainer, toast, Zoom } from 'react-toastify';
+import { BACKEND_URL } from '../../constants/index';
+import axios from 'axios';
 
 const Summarizer = () => {
     const [length, setLength] = useState('Short'); // Default selected radio button
@@ -9,11 +11,21 @@ const Summarizer = () => {
     const [output, setOutput] = useState(''); // Output textarea
 
 
-    const handleSummarize = () => {
-        // Example processing logic
-        const summary = `Length: ${length}, Tone: ${tone}\n\n${inputText}`;
-        setOutput(summary);
-      };      
+    const config = {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+    };
+
+    const handleSummarize = async () => {
+
+        try {
+            const summarizeText = await axios.post(`${BACKEND_URL}/api/summarize`, { length, tone, inputText }, config);
+            console.log(summarizeText.data);
+            setOutput(summarizeText.data);
+        } catch (error) {
+
+        }
+    };
 
 
     const handleCopy = () => {

@@ -5,7 +5,14 @@ const geminiRoutes = require("./GeminiRoutes/geminiRoutes");
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors());
+const corsOptions = {
+  origin: ["https://quickdigest.vercel.app", "http://localhost:5173"],
+  optionsSuccessStatus: 200,
+  credentials: true,
+};
+
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use('/api', geminiRoutes)
