@@ -16,16 +16,32 @@ const Summarizer = () => {
         withCredentials: true,
     };
 
-    const handleSummarize = async () => {
+    const formatBulletPoints = (text) => {
+    return text
+        .replace(/\*\*(.*?)\*\*/g, '\n\n$1:')                // Turn **Heading** to "Heading:"
+        .replace(/^\s*[-*•]\s?/gm, '')                        // Remove extra bullets at line start
+        .replace(/^(.*?):/gm, '🔹 $1:')                        // Add blue diamond before headings
+        .replace(/(?:\r\n|\r|\n){2,}/g, '\n\n')               // Normalize extra line breaks
+        .trim();
+};
 
+
+    const handleSummarize = async () => {
         try {
             const summarizeText = await axios.post(`${BACKEND_URL}/api/summarize`, { length, tone, inputText }, config);
-            console.log(summarizeText.data);
-            setOutput(summarizeText.data);
-        } catch (error) {
+            let summary = summarizeText.data.summary;
 
+            // Format if tone is bullet points
+            if (tone.toLowerCase() === "bullet points") {
+                summary = formatBulletPoints(summary);
+            }
+
+            setOutput(summary);
+        } catch (error) {
+            console.error("Summarization failed:", error);
         }
     };
+
 
 
     const handleCopy = () => {
@@ -114,20 +130,20 @@ const Summarizer = () => {
                         placeholder='Paste your text and press "Summarize"'
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
-                        className="p-3 border-2 border-gray-300 rounded-2xl outline-purple-500 h-96 w-full resize-none"
+                        className="p-3 border-2 border-gray-300 rounded-2xl text-justify outline-purple-500 h-96 w-full resize-none"
                     />
 
                     <div className='flex justify-end w-full h-12'>
                         <button onClick={handleSummarize}
-                            class="relative inline-flex items-center justify-center px-8 py-2.5 overflow-hidden tracking-tighter text-white bg-gray-800 rounded-md group"
+                            className="relative inline-flex items-center justify-center px-8 py-2.5 overflow-hidden tracking-tighter text-white bg-gray-800 rounded-md group"
                         >
                             <span
-                                class="absolute w-0 h-0 transition-all duration-500 ease-out bg-purple-500 rounded-full group-hover:w-56 group-hover:h-56"
+                                className="absolute w-0 h-0 transition-all duration-500 ease-out bg-purple-500 rounded-full group-hover:w-56 group-hover:h-56"
                             ></span>
-                            <span class="absolute bottom-0 left-0 h-full -ml-2">
+                            <span className="absolute bottom-0 left-0 h-full -ml-2">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    class="w-auto h-full opacity-100 object-stretch"
+                                    className="w-auto h-full opacity-100 object-stretch"
                                     viewBox="0 0 487 487"
                                 >
                                     <path
@@ -138,10 +154,10 @@ const Summarizer = () => {
                                     ></path>
                                 </svg>
                             </span>
-                            <span class="absolute top-0 right-0 w-12 h-full -mr-3">
+                            <span className="absolute top-0 right-0 w-12 h-full -mr-3">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    class="object-cover w-full h-full"
+                                    className="object-cover w-full h-full"
                                     viewBox="0 0 487 487"
                                 >
                                     <path
@@ -153,9 +169,9 @@ const Summarizer = () => {
                                 </svg>
                             </span>
                             <span
-                                class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-200"
+                                className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-200"
                             ></span>
-                            <span class="relative text-base font-semibold">Summarize</span>
+                            <span className="relative text-base font-semibold">Summarize</span>
                         </button>
                     </div>
                 </div>
@@ -166,7 +182,7 @@ const Summarizer = () => {
                         id="output"
                         value={output}
                         readOnly
-                        className="p-3 border-2 border-gray-300 rounded-2xl outline-purple-500 h-96 w-full resize-none"
+                        className="p-3 border-2 border-gray-300 rounded-2xl text-justify outline-purple-500 h-96 w-full resize-none"
                     />
 
                     <div className='flex justify-end w-full h-12'>
