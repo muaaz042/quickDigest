@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { MdOutlineContentCopy } from "react-icons/md";
 import { ToastContainer, toast, Zoom } from 'react-toastify';
 import { BACKEND_URL } from '../../constants/index';
+import Loader from '../Components/Loader'
 import axios from 'axios';
 
 const Summarizer = () => {
@@ -9,6 +10,8 @@ const Summarizer = () => {
     const [tone, setTone] = useState('professional'); // Default selected dropdown option
     const [inputText, setInputText] = useState(''); // Input textarea
     const [output, setOutput] = useState(''); // Output textarea
+    const [loading, setLoading] = useState(false);
+
 
 
     const config = {
@@ -17,30 +20,35 @@ const Summarizer = () => {
     };
 
     const formatBulletPoints = (text) => {
-    return text
-        .replace(/\*\*(.*?)\*\*/g, '\n\n$1:')                // Turn **Heading** to "Heading:"
-        .replace(/^\s*[-*•]\s?/gm, '')                        // Remove extra bullets at line start
-        .replace(/^(.*?):/gm, '🔹 $1:')                        // Add blue diamond before headings
-        .replace(/(?:\r\n|\r|\n){2,}/g, '\n\n')               // Normalize extra line breaks
-        .trim();
-};
+        return text
+            .replace(/\*\*(.*?)\*\*/g, '\n\n$1:')                // Turn **Heading** to "Heading:"
+            .replace(/^\s*[-*•]\s?/gm, '')                        // Remove extra bullets at line start
+            .replace(/^(.*?):/gm, '🔹 $1:')                        // Add blue diamond before headings
+            .replace(/(?:\r\n|\r|\n){2,}/g, '\n\n')               // Normalize extra line breaks
+            .trim();
+    };
 
 
     const handleSummarize = async () => {
+        setLoading(true);
+        setOutput(''); // Optional: Clear previous output
         try {
             const summarizeText = await axios.post(`${BACKEND_URL}/api/summarize`, { length, tone, inputText }, config);
             let summary = summarizeText.data.summary;
-
-            // Format if tone is bullet points
+    
             if (tone.toLowerCase() === "bullet points") {
                 summary = formatBulletPoints(summary);
             }
-
+    
             setOutput(summary);
         } catch (error) {
             console.error("Summarization failed:", error);
+            toast.error("Failed to summarize. Please try again.");
+        } finally {
+            setLoading(false);
         }
     };
+    
 
 
 
@@ -177,19 +185,26 @@ const Summarizer = () => {
                 </div>
 
                 <div className='flex justify-start items-end flex-col gap-3 flex-1 w-full'>
-                    <textarea
-                        name="output"
-                        id="output"
-                        value={output}
-                        readOnly
-                        className="p-3 border-2 border-gray-300 rounded-2xl text-justify outline-purple-500 h-96 w-full resize-none"
-                    />
-
-                    <div className='flex justify-end w-full h-12'>
-                        <MdOutlineContentCopy onClick={handleCopy} className='text-4xl hover:text-purple-500' />
-                        <ToastContainer />
+                    <div className="p-3 border-2 border-gray-300 rounded-2xl h-96 w-full flex items-center justify-center bg-white">
+                        {loading ? (
+                            <Loader />
+                        ) : (
+                            <textarea
+                                name="output"
+                                id="output"
+                                value={output}
+                                readOnly
+                                className="w-full h-full resize-none outline-purple-500 text-justify"
+                            />
+                        )}
                     </div>
 
+                    <div className='flex justify-end w-full h-12'>
+                        {!loading && (
+                            <MdOutlineContentCopy onClick={handleCopy} className='text-4xl hover:text-purple-500 cursor-pointer' />
+                        )}
+                        <ToastContainer />
+                    </div>
                 </div>
             </div>
         </div>

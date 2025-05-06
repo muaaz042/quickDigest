@@ -7,7 +7,7 @@ const Header = () => {
             <img src="./logo.png" alt="Logo image" className='h-16 w-16' />
             <p className='lg:text-4xl md:text-3xl sm:text-2xl text-sm font-bold'><span className='text-purple-500'>Q</span>uick <span className='text-purple-500'>D</span>igest</p>
         </div>
-        <p className='lg:text-4xl md:text-3xl sm:text-2xl text-sm font-bold'>AI Text Summarizer</p>
+        <a href="#about" className='lg:text-4xl md:text-3xl sm:text-2xl text-xl font-bold'>About</a>
     </div>
   )
 }
