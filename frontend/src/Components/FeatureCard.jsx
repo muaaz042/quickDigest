@@ -2,7 +2,7 @@ import React from 'react'
 
 const FeatureCard = ({ data }) => {
     return (
-        <div class="flex flex-col justify-center items-center my-6 bg-white shadow-sm border border-slate-200 hover:border-purple-500 rounded-xl p-2">
+        <div class="flex flex-col hover:scale-110 justify-center items-center my-6 bg-white shadow-sm border border-slate-200 hover:border-purple-500 rounded-xl p-2">
             <div class="p-3 text-center">
                 <div class="flex justify-center mb-4">
                     <img src={data.imgsrc} alt="image" class="w-12 h-12" />

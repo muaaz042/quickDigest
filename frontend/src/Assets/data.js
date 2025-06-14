@@ -13,3 +13,20 @@ export const features = [
         desc: 'Choose between bullet point or paragraph style and adjust length'
     },
 ]
+
+
+export const usage = [
+    {
+        step: '1',
+        heading: 'Add Text',
+        desc: 'Paste your text into text area'
+    },{
+        step: '2',
+        heading: 'Adjust Setting',
+        desc: 'Adjust setting like length and tone'
+    },{
+        step: '3',
+        heading: 'Get Summary',
+        desc: 'Click on Summarize button to get summary '
+    },
+]
