@@ -22,7 +22,7 @@ Ensure the summary captures the core ideas accurately, adheres to the specified 
 
 const generateSummary = async (length, tone, inputText) => {
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-8b' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
     const prompt = buildPrompt(length, tone, inputText);
     const result = await model.generateContent([{ text: prompt }]);
     const response = await result.response;
